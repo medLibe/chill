@@ -1,47 +1,34 @@
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getMovies, addMovie } from "../../services/api/ApiMoviesList";
 
-const AddModalList = ({ toggleAddModal, addToList }) => {
-    const movieList = [
-        { img: "/verticals/image205.png" },
-        { img: "/verticals/image207.png" },
-        { img: "/verticals/image208.png" },
-        { img: "/verticals/image210.png" },
-        { img: "/verticals/image211.png" },
-        { img: "/verticals/image212.png" },
-        { img: "/verticals/image214.png" },
-        { img: "/verticals/image215.png" },
-        { img: "/verticals/image217.png" },
-        { img: "/verticals/image218.png" },
-        { img: "/verticals/image219.png" },
-        { img: "/verticals/image220.png" },
-        { img: "/verticals/image221.png" },
-        { img: "/verticals/image222.png" },
-        { img: "/verticals/image223.png" },
-        { img: "/verticals/image228.png" },
-        { img: "/verticals/image230.png" },
-        { img: "/verticals/image231.png" },
-        { img: "/verticals/image232.png" },
-        { img: "/verticals/image234.png" },
-        { img: "/verticals/image235.png" },
-        { img: "/verticals/image236.png" },
-        { img: "/verticals/image206.png" },
-        { img: "/verticals/image209.png" },
-        { img: "/verticals/image213.png" },
-        { img: "/verticals/image216.png" },
-        { img: "/verticals/image224.png" },
-        { img: "/verticals/image225.png" },
-        { img: "/verticals/image226.png" },
-        { img: "/verticals/image227.png" },
-        { img: "/verticals/image229.png" },
-        { img: "/verticals/image233.png" },
-    ];
+const AddModalList = ({ toggleAddModal }) => {
+    const [movies, setMovies] = useState([]);
 
-    const handleAddToList = (item) => {
-        addToList(item);
-    }
+    useEffect(() => {
+        const fetchMovies = async () => {
+            try {
+                const moviesData = await getMovies();
+                setMovies(moviesData);
+            } catch (error) {
+                console.error('Error fetching movies:', error);
+            }
+        };
 
+        fetchMovies();
+    }, []);
+
+    const handleAddToList = async (newMovie) => {
+        try {
+            await addMovie(newMovie);
+            const updatedMovies = await getMovies();
+            setMovies(updatedMovies);
+        } catch (error) {
+            console.error('Error adding movie to my list:', error);
+        }
+    };
+    
     return (
         <div className="fixed z-50 inset-0 flex items-center justify-center bg-[#181A1C] bg-opacity-50">
             {/* for content modal */}
@@ -56,7 +43,7 @@ const AddModalList = ({ toggleAddModal, addToList }) => {
                         Tambah Daftar Baru Saya
                     </div>
                     <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-5 lg:gap-5 xl:gap-6 2xl:gap-8">
-                        {movieList.map((item, index) => (
+                        {movies.map((item, index) => (
                             <div
                                 key={index}
                                 className="w-[6em] h-[9em] sm:w-[8em] sm:h-[11em] md:w-[12em] md:h-[16em] lg:w-[10em] lg:h-[15em] xl:w-[9em] xl:h-[12em] 2xl:w-[7em] 2xl:h-[10em] flex-shrink-0 relative text-white"
