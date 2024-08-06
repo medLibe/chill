@@ -1,33 +1,151 @@
-import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { getMovies, addMovie } from "../../services/api/ApiMoviesList";
+import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMovies } from "../../store/redux/MoviesSlice";
+import { addMovieToMyList } from "../../store/redux/MyListSlice";
 
 const AddModalList = ({ toggleAddModal }) => {
-    const [movies, setMovies] = useState([]);
+    const dispatch = useDispatch();
+    const movies = useSelector(state => state.movies.movies);
 
     useEffect(() => {
-        const fetchMovies = async () => {
-            try {
-                const moviesData = await getMovies();
-                setMovies(moviesData);
-            } catch (error) {
-                console.error('Error fetching movies:', error);
-            }
-        };
+        dispatch(fetchMovies());
+    }, [dispatch]);
 
-        fetchMovies();
-    }, []);
-
-    const handleAddToList = async (newMovie) => {
-        try {
-            await addMovie(newMovie);
-            const updatedMovies = await getMovies();
-            setMovies(updatedMovies);
-        } catch (error) {
-            console.error('Error adding movie to my list:', error);
-        }
+    const handleAddToList = (newMovie) => {
+        dispatch(addMovieToMyList(newMovie));
     };
+
+        /**
+         * const movieList = 
+        [
+            {
+                "id": "1",
+                "img": "/verticals/image205.png"
+            },
+            {
+                "id": "2",
+                "img": "/verticals/image206.png"
+            },
+            {
+                "id": "3",
+                "img": "/verticals/image207.png"
+            },
+            {
+                "id": "4",
+                "img": "/verticals/image208.png"
+            },
+            {
+                "id": "5",
+                "img": "/verticals/image209.png"
+            },
+            {
+                "id": "6",
+                "img": "/verticals/image210.png"
+            },
+            {
+                "id": "7",
+                "img": "/verticals/image211.png"
+            },
+            {
+                "id": "8",
+                "img": "/verticals/image212.png"
+            },
+            {
+                "id": "9",
+                "img": "/verticals/image213.png"
+            },
+            {
+                "id": "10",
+                "img": "/verticals/image214.png"
+            },
+            {
+                "id": "11",
+                "img": "/verticals/image215.png"
+            },
+            {
+                "id": "12",
+                "img": "/verticals/image216.png"
+            },
+            {
+                "id": "13",
+                "img": "/verticals/image217.png"
+            },
+            {
+                "id": "14",
+                "img": "/verticals/image218.png"
+            },
+            {
+                "id": "15",
+                "img": "/verticals/image219.png"
+            },
+            {
+                "id": "16",
+                "img": "/verticals/image220.png"
+            },
+            {
+                "id": "17",
+                "img": "/verticals/image221.png"
+            },
+            {
+                "id": "18",
+                "img": "/verticals/image222.png"
+            },
+            {
+                "id": "19",
+                "img": "/verticals/image223.png"
+            },
+            {
+                "id": "20",
+                "img": "/verticals/image224.png"
+            },
+            {
+                "id": "21",
+                "img": "/verticals/image225.png"
+            },
+            {
+                "id": "22",
+                "img": "/verticals/image226.png"
+            },
+            {
+                "id": "23",
+                "img": "/verticals/image227.png"
+            },
+            {
+                "id": "24",
+                "img": "/verticals/image228.png"
+            },
+            {
+                "id": "25",
+                "img": "/verticals/image229.png"
+            },
+            {
+                "id": "26",
+                "img": "/verticals/image230.png"
+            },
+            {
+                "id": "27",
+                "img": "/verticals/image231.png"
+            },
+            {
+                "id": "28",
+                "img": "/verticals/image232.png"
+            },
+            {
+                "id": "29",
+                "img": "/verticals/image234.png"
+            },
+            {
+                "id": "30",
+                "img": "/verticals/image235.png"
+            },
+            {
+                "id": "31",
+                "img": "/verticals/image236.png"
+            }
+        ]
+        */
     
     return (
         <div className="fixed z-50 inset-0 flex items-center justify-center bg-[#181A1C] bg-opacity-50">
