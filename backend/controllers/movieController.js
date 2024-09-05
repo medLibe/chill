@@ -43,6 +43,37 @@ const getMovieById = (req, res) => {
     })
 }
 
+const getMoviesByFilter = (req, res) => {
+    const filter = req.query
+
+    movieModel.getMoviesByFilter(filter, (err, results) => {
+        if(err) return res.status(500).json({error: err.message})
+        res.status(200).json(results)
+    })
+}
+
+const getMoviesBySort = (req, res) => {
+    const { sortBy, order } = req.query
+
+    movieModel.getMoviesBySort(sortBy, order, (err, results) => {
+        if(err) return res.status(500).json({error: err.message})
+        res.status(200).json(results)
+    })
+}
+
+const getMoviesBySearch = (req, res) => {
+    const { searchTerm } = req.query
+
+    if(!query){
+        return res.status(400).json({ error: 'Search keyword can not be empty'})
+    }
+
+    movieModel.getMoviesBySearch(searchTerm, (err, results) => {
+        if(err) return res.status(500).json({error: err.message})
+        res.status(200).json(results)
+    })
+}
+
 const updateMovie = async (req, res) => {
     const {id} = req.params
     const {genre_id, title, release_date, director, duration, rating} = req.body
@@ -93,5 +124,8 @@ module.exports = {
     getAllMovies,
     getMovieById,
     updateMovie,
-    deleteMovie
+    deleteMovie,
+    getMoviesByFilter,
+    getMoviesBySort,
+    getMoviesBySearch
 }

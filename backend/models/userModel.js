@@ -1,8 +1,8 @@
 const connection = require('../database/connection')
 
-const createUser = (email, phone, password, callback) => {
-    const query = 'INSERT INTO users (email, phone, password) VALUES (?,?,?)'
-    connection.query(query, [email, phone, password], callback)
+const createUser = (full_name, username, email, phone, password, email_verification_token,  callback) => {
+    const query = 'INSERT INTO users (full_name, username, email, phone, password, email_verification_token) VALUES (?,?,?,?,?,?)'
+    connection.query(query, [full_name, username, email, phone, password, email_verification_token], callback)
 }
 
 const getAllUsers = (callback) => {
@@ -38,10 +38,54 @@ const deleteUser = (id, callback) => {
     connection.query(query, [id], callback)
 }
 
+const findUserByUsername = (username, callback) => {
+    const query = 'SELECT * FROM users WHERE username = ?'
+    connection.query(query, [username], callback)
+}
+
+const findUserByEmail = (email, callback) => {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM users WHERE email = ?'
+        
+        connection.query(query, [email], (err, result) => {
+            if (err) return reject(err)
+            if (result.length === 0) return resolve(null)
+            resolve(result[0])
+        })
+    })
+}
+
+const findUserByToken = (email_verification_token) => {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM users WHERE email_verification_token = ?'
+   
+        connection.query(query, [email_verification_token], (err, result) => {
+            if(err) return reject(err)
+            if(result.length === 0) return resolve(null)
+            resolve(result[0])
+        })
+    })
+}
+
+const verifyEmail = (id) => {
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE users SET email_verified = true, email_verification_token = NULL WHERE id = ?'
+        connection.query(query, [id], (err, result) => {
+            if(err) return reject(err)
+            if(result.affectedRows === 0) return reject(new Error('User not found'))
+            resolve(result)
+        })
+    })
+}
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    findUserByUsername,
+    findUserByEmail,
+    findUserByToken,
+    verifyEmail
 }

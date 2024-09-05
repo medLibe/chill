@@ -1,11 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const seriesController = require('../controllers/seriesController')
+const authenticateToken = require('../middlewares/authMiddleware')
 
-router.post('/', seriesController.createSeries)
-router.get('/', seriesController.getAllSeries)
-router.get('/:id', seriesController.getSeriesById)
-router.put('/:id', seriesController.updateSeries)
-router.delete('/:id', seriesController.deleteSeries)
+router.post('/', authenticateToken, seriesController.createSeries)
+router.get('/', authenticateToken, seriesController.getAllSeries)
+router.get('/:id', authenticateToken, seriesController.getSeriesById)
+router.put('/:id', authenticateToken, seriesController.updateSeries)
+router.delete('/:id', authenticateToken, seriesController.deleteSeries)
 
 module.exports = router

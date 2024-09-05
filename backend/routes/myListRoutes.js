@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const myListController = require('../controllers/myListController')
+const authenticateToken = require('../middlewares/authMiddleware')
 
-router.post('/', myListController.addToMyList)
-router.get('/:user_id', myListController.getAllMyListByUserId)
-router.delete('/:id/:type', myListController.removeFromMyList)
+router.post('/', authenticateToken, myListController.addToMyList)
+router.get('/:user_id', authenticateToken, myListController.getAllMyListByUserId)
+router.delete('/:id/:type', authenticateToken, myListController.removeFromMyList)
 
 module.exports = router

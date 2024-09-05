@@ -1,10 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const paymentController = require('../controllers/paymentController')
+const authenticateToken = require('../middlewares/authMiddleware')
 
-router.post('/', paymentController.createPayment)
-router.get('/', paymentController.getAllPayments)
-router.get('/user', paymentController.getPaymentByUserId)
-router.get('/:id', paymentController.getPaymentById)
+router.post('/', authenticateToken, paymentController.createPayment)
+router.get('/', authenticateToken, paymentController.getAllPayments)
+router.get('/user', authenticateToken, paymentController.getPaymentByUserId)
+router.get('/:id', authenticateToken, paymentController.getPaymentById)
 
 module.exports = router
